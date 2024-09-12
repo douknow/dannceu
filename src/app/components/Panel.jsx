@@ -33,7 +33,7 @@ const Panel = (props) => {
                 <input type="text" className="w-full h-[30px] border-[1px] border-slate-200 rounded-lg p-2" value={props.nickname} onChange={onNicknameChange} />
             </div>
 
-            <button className="w-full h-[30px] bg-blue-500 text-white rounded-lg">生成</button>
+            <button className="w-full h-[30px] bg-blue-500 text-white rounded-lg" onClick={props.exportImage}>生成</button>
         </div>
     )
 }

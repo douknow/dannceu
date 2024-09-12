@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Canvas = (props) => {
+const Canvas = React.forwardRef((props, ref) => {
 
   const [data, setData] = useState(null);
   const [src, setSrc] = useState(null);
@@ -36,7 +36,7 @@ const Canvas = (props) => {
   }, []); 
 
   return (
-    <div className="bg-white w-[600px] h-[400px] m-auto relative">
+    <div className="bg-white w-[600px] h-[400px] m-auto absolute top-0 left-0" ref={ref}>
         <img src={props.avatar} alt="" className='w-[64px] h-[64px] rounded-[6px] absolute block bg-white' style={{
           left: '16px',
           top: 16 + 6 + 'px'
@@ -52,10 +52,10 @@ const Canvas = (props) => {
             top: emojiRect.top,
             width: emojiRect.width,
             height: emojiRect.height,
-            display: emojiRect.width > 0 ? 'block' : 'none'
+            display: (emojiRect.width > 0 && props.showContent) ? 'block' : 'none'
         }} />
     </div>
   );
-};
+});
 
 export default Canvas;
