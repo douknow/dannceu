@@ -62,7 +62,8 @@ export default function Home() {
     // 获取Canvas元素
     const canvasElement = canvasRef.current;
     // 使用html2canvas库将DOM元素转换为canvas
-    html2canvas(canvasElement).then(async (canvas) => {
+    // scale = 1
+    html2canvas(canvasElement, {scale: 1}).then(async (canvas) => {
       // 将canvas转换为图片数据URL
       const imageDataUrl = canvas.toDataURL('image/png');
 
