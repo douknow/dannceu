@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
+      "@ffmpeg/ffmpeg": ["./node_modules/@ffmpeg/ffmpeg/src"],
+      "@ffmpeg/util": ["./node_modules/@ffmpeg/util/src"],
       "@/*": ["./src/*"]
     }
   }

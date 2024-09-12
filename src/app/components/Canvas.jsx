@@ -12,28 +12,29 @@ const Canvas = React.forwardRef((props, ref) => {
   });
 
   useEffect(() => {
-    // 组件挂载后执行的代码
-    console.log('组件即将挂载');
     let image = new Image();
     image.src = '/images/dance.gif';
     image.onload = () => {
         let emojiWidth = 140;
         let emojiHeight = image.height / image.width * emojiWidth;
         setEmojiRect({
-            left: 16 + 64 + 20 + 'px',
-            top: 46 + 'px',
+            left: 16 + 64 + 20,
+            top: 46,
             width: emojiWidth,
             height: emojiHeight
         });
-        console.log(emojiRect);
         setSrc(image.src);
     };
-  
-    return () => {
-      // 组件卸载前执行的清理代码
-      console.log('组件即将卸载');
-    };
   }, []); 
+
+  useEffect(() => {
+    if (props.emojiRectChange && typeof props.emojiRectChange === 'function') props.emojiRectChange(emojiRect);
+    
+  }, [emojiRect]);
+
+  useEffect(() => {
+    if (props.emojiLoaded && typeof props.emojiLoaded === 'function') props.emojiLoaded(src);
+  }, [src]);
 
   return (
     <div className="bg-white w-[600px] h-[400px] m-auto absolute top-0 left-0" ref={ref}>
