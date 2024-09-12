@@ -34,6 +34,7 @@ import numpy as np
 import subprocess
 import tempfile
 import os
+from PIL import ImageGrab
 
 def detect_avatar_and_nickname(image_path):
     # Read the image
@@ -177,13 +178,37 @@ def expand_image(image_path, avatar_position, nickname_position, expansion_ratio
         ]
         subprocess.run(ffmpeg_cmd, check=True)
 
-        print("已使用ffmpeg将dance.gif按原比例合成到new_image中心位置，结果保存为result.gif")
+        # 将结果图片读取为PIL Image对象
+        result_image = Image.open("result.gif")
+        
+        # 将PIL Image对象复制到剪贴板
+        ImageGrab.grabclipboard()
+        ImageGrab.grabclipboard(result_image)
+        
+        print("已将结果图片复制到剪贴板")
         return
 
     print("已使用ffmpeg将dance.gif合成到mask位置，结果保存为result.gif")
 
-# Usage example
-image_path = "demo.png"
+
+
+# 从剪贴板读取图片
+image = ImageGrab.grabclipboard()
+if image is None:
+    print("剪贴板中没有图片")
+    exit()
+
+# 将PIL图像转换为OpenCV格式
+image_np = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+
+# 保存为临时文件
+temp_image_path = "temp_clipboard_image.png"
+cv2.imwrite(temp_image_path, image_np)
+
+# 更新image_path
+image_path = temp_image_path
+
+
 avatar_position, nickname_position = detect_avatar_and_nickname(image_path)
 expand_image(image_path, avatar_position, nickname_position)
 
