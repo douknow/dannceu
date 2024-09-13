@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { fitInRect } from '../util';
 
 const Panel = (props) => {
 
     const emojiContainerRect = { left: 0, top: 0, width: 120, height: 120 }
-    const innerEmojiContentRect = { left: 16, top: 16, width: 100, height: 100 }
+    const innerEmojiContentRect = { left: 10, top:10, width: 100, height: 100 }
     
     const [emojiRect, setEmojiRect] = useState({
         left: 0,
@@ -13,25 +14,9 @@ const Panel = (props) => {
     })
 
     useEffect((v) => {
-        console.log('--- ', v)
-        
-        // calc new rect fit in container, and keep emoji rect aspect ratio
-        if (Math.min(props.contentEmojiRect.width, props.contentEmojiRect.height) <= 0) 
-            return
-
-        let emojiContentRect = props.contentEmojiRect
-        let emojiFitRect = innerEmojiContentRect
-        if (emojiContentRect.height > emojiContentRect.width) {
-            emojiFitRect.width = emojiContentRect.width / emojiContentRect.height * emojiFitRect.height
-        } else {
-            emojiFitRect.height = emojiContentRect.height / emojiContentRect.width * emojiFitRect.width
-        }
-
-        emojiFitRect.left = emojiContainerRect.left + (emojiContainerRect.width - emojiFitRect.width) / 2
-        emojiFitRect.top = emojiContainerRect.top + (emojiContainerRect.height - emojiFitRect.height) / 2
-
-        console.log(emojiFitRect)
-        setEmojiRect(emojiFitRect)
+        console.log(' innerEmojiContentRect: ', innerEmojiContentRect)
+        let emojiRect = fitInRect(innerEmojiContentRect, props.contentEmojiRect)
+        setEmojiRect(emojiRect)
     }, [props.contentEmojiRect])
 
     const chooseImage = () => {

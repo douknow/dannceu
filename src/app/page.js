@@ -6,6 +6,7 @@ import Panel from "./components/Panel";
 import html2canvas from 'html2canvas-pro';
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import { createFFmpeg, FS } from '../../node_modules/@ffmpeg/ffmpeg/src'
+import { fitInRect } from "./util";
 
 export default function Home() {
   
@@ -25,20 +26,24 @@ export default function Home() {
   const ffmpegRef = useRef(createFFmpeg({ log: true }))
 
   useEffect(() => {
+    loadEmoji('/images/dance.gif')
+  }, []); 
+
+  const loadEmoji = async (src) => {
     let image = new Image();
-    image.src = '/images/dance.gif';
+    image.src = src
     image.onload = () => {
-        let emojiWidth = 140;
-        let emojiHeight = image.height / image.width * emojiWidth;
+        let emojiContainerRect = { left: 16 + 64 + 20, top: 46, width: 195, height: 195 }
+        let fitedEmojiRect = fitInRect(emojiContainerRect, { left: 0, top: 0, width: image.width, height: image.height })
         setEmojiRect({
             left: 16 + 64 + 20,
             top: 46,
-            width: emojiWidth,
-            height: emojiHeight
+            width: fitedEmojiRect.width,
+            height: fitedEmojiRect.height
         });
         setEmoji(image.src);
     };
-  }, []); 
+  }
 
   const load = async () => {
     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
@@ -58,8 +63,8 @@ export default function Home() {
     setNickname(nickname);
   }
 
-  const emojiLoaded = (emoji) => {
-    setEmoji(emoji);
+  const handleContentEmojiChange = (emoji) => {
+    loadEmoji(emoji);
   }
 
   const exportImage = async () => {
@@ -112,10 +117,10 @@ export default function Home() {
       <main className="flex gap-8 row-start-2 items-center sm:items-start">
         <div className="relative w-[600px] h-[400px]">
           <Canvas ref={canvasRef} showContent={false} avatar={avatar} nickname={nickname} emojiRect={emojiRect} />
-          <Canvas showContent={true} avatar={avatar} nickname={nickname} emojiLoaded={emojiLoaded} contentEmoji={emoji} emojiRect={emojiRect} />
+          <Canvas showContent={true} avatar={avatar} nickname={nickname} contentEmoji={emoji} emojiRect={emojiRect} />
         </div>
 
-        <Panel avatar={avatar} nickname={nickname} onAvatarChange={handleAvatarChange} onNicknameChange={handleNicknameChange} exportImage={exportImage} contentEmoji={emoji} contentEmojiRect={emojiRect}/>
+        <Panel avatar={avatar} nickname={nickname} onAvatarChange={handleAvatarChange} onNicknameChange={handleNicknameChange} exportImage={exportImage} contentEmoji={emoji} contentEmojiRect={emojiRect} onContentEmojiChange={handleContentEmojiChange}/>
       </main>
     </div>
   );
