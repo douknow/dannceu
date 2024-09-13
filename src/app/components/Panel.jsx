@@ -54,7 +54,7 @@ const Panel = (props) => {
     }
 
     return (
-        <div className="bg-white w-[300px] border-[1px] border-slate-200 rounded-lg p-4 flex flex-col gap-4">
+        <div className="bg-white w-[300px] border-[1px] border-slate-200 rounded-lg p-4 flex flex-col gap-4 fixed right-20 top-[50%] translate-y-[-50%] max-h-[80%] overflow-y-auto">
             <div className="flex flex-col gap-2">
                 <label className="font-bold">头像：</label>
                 <img src={props.avatar} alt="" className="w-[64px] h-[64px] rounded-lg border-[1px] border-slate-200 cursor-pointer" onClick={chooseImage} />
@@ -83,6 +83,20 @@ const Panel = (props) => {
                     />
                 </div>
             </div>
+
+            <div className="w-full h-[1px] bg-slate-200"></div>
+
+            <div className="flex flex-col gap-2">
+                <label className="font-bold">宽度：</label>
+                <input type="range" min="100" max="600"/>
+            </div>
+
+            <div className="flex flex-col gap-2">
+                <label className="font-bold">高度：</label>
+                <input type="range" min="100" max="600"/>
+            </div>
+
+            <div className="w-full h-[1px] bg-slate-200"></div>
 
             <button className="w-full h-[30px] bg-blue-500 text-white rounded-lg" onClick={props.exportImage}>生成</button>
         </div>
