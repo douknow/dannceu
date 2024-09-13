@@ -37,7 +37,7 @@ const Canvas = React.forwardRef((props, ref) => {
   }, [src]);
 
   return (
-    <div className="bg-white w-[600px] h-[400px] m-auto absolute top-0 left-0" ref={ref}>
+    <div className="bg-white w-[300px] h-[260px] m-auto absolute top-0 left-0" ref={ref}>
         <img src={props.avatar} alt="" className='w-[64px] h-[64px] rounded-[6px] absolute block bg-white' style={{
           left: '16px',
           top: 16 + 6 + 'px'
