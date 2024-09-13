@@ -53,8 +53,16 @@ const Panel = (props) => {
         input.click();
     }
 
+    const onWidthChange = (e) => {
+        props.onWidthChange(e.target.value);
+    }
+
+    const onHeightChange = (e) => {
+        props.onHeightChange(e.target.value);
+    }
+
     return (
-        <div className="bg-white w-[300px] border-[1px] border-slate-200 rounded-lg p-4 flex flex-col gap-4 fixed right-20 top-[50%] translate-y-[-50%] max-h-[80%] overflow-y-auto">
+        <div className="bg-white w-[300px] border-[1px] border-slate-200 rounded-lg p-4 flex flex-col gap-4 fixed right-20 top-[50%] translate-y-[-50%] max-h-[80%] overflow-y-auto shadow-lg">
             <div className="flex flex-col gap-2">
                 <label className="font-bold">头像：</label>
                 <img src={props.avatar} alt="" className="w-[64px] h-[64px] rounded-lg border-[1px] border-slate-200 cursor-pointer" onClick={chooseImage} />
@@ -88,12 +96,12 @@ const Panel = (props) => {
 
             <div className="flex flex-col gap-2">
                 <label className="font-bold">宽度：</label>
-                <input type="range" min="100" max="600"/>
+                <input type="range" min={props.minCanvasSize.width} max={props.maxCanvasSize.width} value={props.canvasSize.width} onChange={onWidthChange}/>
             </div>
 
             <div className="flex flex-col gap-2">
                 <label className="font-bold">高度：</label>
-                <input type="range" min="100" max="600"/>
+                <input type="range" min={props.minCanvasSize.height} max={props.maxCanvasSize.height} value={props.canvasSize.height} onChange={onHeightChange}/>
             </div>
 
             <div className="w-full h-[1px] bg-slate-200"></div>

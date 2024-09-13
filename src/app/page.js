@@ -10,6 +10,15 @@ import { fitInRect } from "./util";
 
 export default function Home() {
   
+  const minCanvasSize = {
+    width: 50,
+    height: 50
+  }
+  const maxCanvasSize = {
+    width: 600,
+    height: 400
+  }
+
   const [avatar, setAvatar] = useState('/images/demo_avatar.png');
   const [nickname, setNickname] = useState('陈八');
   const [loaded, setLoaded] = useState(false);
@@ -19,6 +28,10 @@ export default function Home() {
     top: 0,
     width: 0,
     height: 0
+  });
+  const [canvasSize, setCanvasSize] = useState({
+    width: 300,
+    height: 260
   });
   
   const canvasRef = useRef(null);
@@ -65,6 +78,14 @@ export default function Home() {
 
   const handleContentEmojiChange = (emoji) => {
     loadEmoji(emoji);
+  }
+
+  const handleWidthChange = (width) => {
+    setCanvasSize({ ...canvasSize, width: width });
+  }
+
+  const handleHeightChange = (height) => {
+    setCanvasSize({ ...canvasSize, height: height });
   }
 
   const exportImage = async () => {
@@ -116,11 +137,25 @@ export default function Home() {
     <div className="bg-slate-100">
       <main className="flex gap-8 row-start-2 items-center sm:items-start w-full h-[100vh] overflow-hidden">
         <div className="relative w-[600px] h-[400px] top-[50%] translate-y-[-50%] left-[50%] translate-x-[-60%]">
-          <Canvas ref={canvasRef} showContent={false} avatar={avatar} nickname={nickname} emojiRect={emojiRect} />
-          <Canvas showContent={true} avatar={avatar} nickname={nickname} contentEmoji={emoji} emojiRect={emojiRect} />
+          <Canvas ref={canvasRef} showContent={false} avatar={avatar} nickname={nickname} emojiRect={emojiRect} width={canvasSize.width} height={canvasSize.height} />
+          <Canvas showContent={true} avatar={avatar} nickname={nickname} contentEmoji={emoji} emojiRect={emojiRect} width={canvasSize.width} height={canvasSize.height} />
         </div>
 
-        <Panel avatar={avatar} nickname={nickname} onAvatarChange={handleAvatarChange} onNicknameChange={handleNicknameChange} exportImage={exportImage} contentEmoji={emoji} contentEmojiRect={emojiRect} onContentEmojiChange={handleContentEmojiChange}/>
+        <Panel 
+          avatar={avatar} 
+          nickname={nickname} 
+          onAvatarChange={handleAvatarChange} 
+          onNicknameChange={handleNicknameChange} 
+          exportImage={exportImage} 
+          contentEmoji={emoji} 
+          contentEmojiRect={emojiRect} 
+          onContentEmojiChange={handleContentEmojiChange}
+          canvasSize={canvasSize}
+          minCanvasSize={minCanvasSize}
+          maxCanvasSize={maxCanvasSize}
+          onWidthChange={handleWidthChange}
+          onHeightChange={handleHeightChange}
+        />
       </main>
     </div>
   );
