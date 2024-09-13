@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 const Canvas = React.forwardRef((props, ref) => {
   return (
-    <div className="bg-white m-auto absolute top-0 left-0 overflow-hidden"
+    <div className="m-auto absolute top-0 left-0 overflow-hidden rounded-[6px] border-[1px] border-slate-200"
         style={{
             width: props.width + 'px',
             height: props.height + 'px',
-            maskImage: 'linear-gradient(to bottom, white, white 100%)'
+            maskImage: 'linear-gradient(to bottom, white, white 100%)',
+            backgroundColor: props.background === 'transparent' ? 'transparent' : 'white'
         }}
         ref={ref}>
         <img src={props.avatar} alt="" className='rounded-[6px] fixed block bg-white' style={{

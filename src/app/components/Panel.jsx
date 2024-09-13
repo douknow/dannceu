@@ -61,6 +61,10 @@ const Panel = (props) => {
         props.onHeightChange(e.target.value);
     }
 
+    const onBackgroundChange = (e) => {
+        props.onBackgroundChange(e.target.value);
+    }
+
     return (
         <div className="bg-white w-[300px] border-[1px] border-slate-200 rounded-lg p-4 flex flex-col gap-4 fixed right-20 top-[50%] translate-y-[-50%] max-h-[80%] overflow-y-auto shadow-lg">
             <div className="flex flex-col gap-2">
@@ -102,6 +106,22 @@ const Panel = (props) => {
             <div className="flex flex-col gap-2">
                 <label className="font-bold">高度：</label>
                 <input type="range" min={props.minCanvasSize.height} max={props.maxCanvasSize.height} value={props.canvasSize.height} onChange={onHeightChange}/>
+            </div>
+
+            <div className="w-full h-[1px] bg-slate-200"></div>
+
+            <div className="flex flex-col gap-2">
+                <label className="font-bold">背景：</label>
+                <div className="flex gap-2">
+                    <label className="flex items-center gap-2">
+                        <input type="radio" name="background" value="transparent" checked={props.background === 'transparent'} onChange={onBackgroundChange}/>
+                        透明
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <input type="radio" name="background" value="white" checked={props.background === 'white'} onChange={onBackgroundChange}/>
+                        白色
+                    </label>
+                </div>
             </div>
 
             <div className="w-full h-[1px] bg-slate-200"></div>
