@@ -36,6 +36,7 @@ export default function Home() {
   const [background, setBackground] = useState('white');
   const [loadingText, setLoadingText] = useState('加载中...');
   const [exporting, setExporting] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState('dance');
   
   const canvasRef = useRef(null);
 
@@ -157,29 +158,55 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="flex gap-8 row-start-2 items-center sm:items-start w-full h-[100vh] overflow-hidden">
-        <div className="relative w-[600px] h-[400px] top-[50%] translate-y-[-50%] left-[50%] translate-x-[-60%]">
-          <Canvas ref={canvasRef} showContent={false} avatar={avatar} nickname={nickname} emojiRect={emojiRect} width={canvasSize.width} height={canvasSize.height} background={background} />
-          <Canvas showContent={true} avatar={avatar} nickname={nickname} contentEmoji={emoji} emojiRect={emojiRect} width={canvasSize.width} height={canvasSize.height} background={background} />
+      <div  className="rounded-lg border-slate-200 bg-white border-[1px] p-4 w-[300px] h-[64px] flex flex-row gap-4 justify-center items-center fixed top-1 left-[50%] translate-x-[-50%]">
+        <div 
+        className={"w-[44px] h-[44px] cursor-pointer border-[1px] border-slate-200 rounded-md text-xs text-center leading-4 flex justify-center items-center " + (selectedMenu === 'dance' ? 'bg-blue-500 text-white' : 'bg-white text-black') }
+        onClick={() => setSelectedMenu('dance')}
+        >
+          <div>跳舞</div>
+        </div>
+        <div 
+        className={"w-[44px] h-[44px] cursor-pointer border-[1px] border-slate-200 rounded-md text-xs text-center leading-4 flex justify-center items-center " + (selectedMenu === 'longtu' ? 'bg-blue-500 text-white' : 'bg-white text-black')}
+        onClick={() => setSelectedMenu('longtu')}>
+          <div>龙图</div>
         </div>
 
-        <Panel 
-          avatar={avatar} 
-          nickname={nickname} 
-          onAvatarChange={handleAvatarChange} 
-          onNicknameChange={handleNicknameChange} 
-          exportImage={exportImage} 
-          contentEmoji={emoji} 
-          contentEmojiRect={emojiRect} 
-          onContentEmojiChange={handleContentEmojiChange}
-          canvasSize={canvasSize}
-          minCanvasSize={minCanvasSize}
-          maxCanvasSize={maxCanvasSize}
-          onWidthChange={handleWidthChange}
-          onHeightChange={handleHeightChange}
-          background={background}
-          onBackgroundChange={handleBackgroundChange}
-        />
+        <div className="flex-1"></div>
+      </div>
+
+      <main className="flex gap-8 row-start-2 items-center sm:items-start w-full h-[100vh] overflow-hidden">
+      {
+        selectedMenu === 'dance' ? (
+          <div className="w-full h-full">
+            <div className="relative w-[600px] h-[400px] top-[50%] translate-y-[-50%] left-[50%] translate-x-[-60%]">
+                <Canvas ref={canvasRef} showContent={false} avatar={avatar} nickname={nickname} emojiRect={emojiRect} width={canvasSize.width} height={canvasSize.height} background={background} />
+                <Canvas showContent={true} avatar={avatar} nickname={nickname} contentEmoji={emoji} emojiRect={emojiRect} width={canvasSize.width} height={canvasSize.height} background={background} />
+              </div>
+
+                <Panel 
+                  avatar={avatar} 
+                  nickname={nickname} 
+                onAvatarChange={handleAvatarChange} 
+                onNicknameChange={handleNicknameChange} 
+                exportImage={exportImage} 
+                contentEmoji={emoji} 
+                contentEmojiRect={emojiRect} 
+                onContentEmojiChange={handleContentEmojiChange}
+                canvasSize={canvasSize}
+                minCanvasSize={minCanvasSize}
+                maxCanvasSize={maxCanvasSize}
+                onWidthChange={handleWidthChange}
+                onHeightChange={handleHeightChange}
+                background={background}
+                onBackgroundChange={handleBackgroundChange}
+                />
+          </div>    
+        ) : (
+          <div className="w-full h-full flex justify-center items-center">
+            <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Coming Soon...</h3>
+          </div>
+        )
+      }
       </main>
     </div>
   );
