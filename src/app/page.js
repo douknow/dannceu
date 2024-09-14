@@ -42,7 +42,7 @@ export default function Home() {
   const [loadingText, setLoadingText] = useState("加载中...");
   const [exporting, setExporting] = useState(false);
 
-  const [selectedMenu, setSelectedMenu] = useState("longtu");
+  const [selectedMenu, setSelectedMenu] = useState("dance");
   const [longtuTextHeight, setLongtuTextHeight] = useState(38);
   const [longtuRect, setLongtuRect] = useState({
     left: 0,
@@ -188,7 +188,7 @@ export default function Home() {
 
   const exportImage = async () => {
     setExporting(true);
-    if (!loaded && selectedMenu === "dance") {
+    if (!loaded) {
       setLoadingText("Loading ffmpeg...");
       await load();
     }
@@ -206,9 +206,26 @@ export default function Home() {
       // 将canvas转换为图片数据URL
       const imageDataUrl = canvas.toDataURL("image/png");
       let outputDataUrl;
+      let outputBlob;
 
       if (selectedMenu === "longtu") {
         outputDataUrl = imageDataUrl;
+        let ffmpeg = ffmpegRef.current;
+        await ffmpeg.FS(
+          "writeFile",
+          "input.png",
+          await fetchFile(imageDataUrl)
+        );
+        await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
+        await ffmpeg.run(
+          "-i",
+          "input.png",
+          "result.gif"
+        );
+        const data = await ffmpeg.FS("readFile", "result.gif");
+        let blob = new Blob([data.buffer], { type: "image/png" })
+        outputBlob = blob;
+        outputDataUrl = URL.createObjectURL(blob);
       } else {
         let ffmpeg = ffmpegRef.current;
         await ffmpeg.FS(
@@ -324,6 +341,7 @@ export default function Home() {
               longtuText={longtuText}
               longtuTextHeight={longtuTextHeight}
               longtuTextSize={longtuTextSize}
+              isExporting={exporting}
             />
             <Canvas
               showContent={true}
@@ -340,6 +358,7 @@ export default function Home() {
               longtuText={longtuText}
               longtuTextHeight={longtuTextHeight}
               longtuTextSize={longtuTextSize}
+              isExporting={exporting}
             />
           </div>
           <Panel
