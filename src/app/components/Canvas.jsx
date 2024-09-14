@@ -7,7 +7,8 @@ const Canvas = React.forwardRef((props, ref) => {
             width: props.width + 'px',
             height: props.height + 'px',
             maskImage: 'linear-gradient(to bottom, white, white 100%)',
-            backgroundColor: props.background === 'transparent' ? 'transparent' : 'white'
+            backgroundColor: props.background === 'transparent' ? 'transparent' : 'white',
+            borderWidth: props.showContent ? 1 : 0
         }}
         ref={ref}>
         <img src={props.avatar} alt="" className='rounded-[6px] fixed block bg-white' style={{
@@ -19,7 +20,8 @@ const Canvas = React.forwardRef((props, ref) => {
 
         <div className='text-[17px] fixed block text-[#3c3c4399]' style={{
           left: 16 + 64 + 20 + 'px',
-          top: 16 + 'px'
+          top: 16 + 'px',
+          fontWeight: props.background === 'transparent' ? 500 : 300
         }} >{props.nickname}</div>
 
         <img src={props.contentEmoji} alt="" className='fixed block' style={{
