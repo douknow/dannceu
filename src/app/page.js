@@ -17,14 +17,12 @@ export default function Home() {
     width: 600,
     height: 400,
   };
-  const defaultLongtuCanvasSize = {
-    width: 250,
-    height: 300,
+  const defaultCanvasDance = {
+    width: 300,
+    height: 260,
   };
 
-  const defaultLongtus = [
-    '/images/longtu1.png',
-  ]
+  const defaultLongtus = ["/images/longtu1.png"];
 
   const [avatar, setAvatar] = useState("/images/demo_avatar.png");
   const [nickname, setNickname] = useState("陈八");
@@ -44,7 +42,6 @@ export default function Home() {
   const [loadingText, setLoadingText] = useState("加载中...");
   const [exporting, setExporting] = useState(false);
 
-  
   const [selectedMenu, setSelectedMenu] = useState("longtu");
   const [longtuTextHeight, setLongtuTextHeight] = useState(38);
   const [longtuRect, setLongtuRect] = useState({
@@ -62,39 +59,48 @@ export default function Home() {
   const ffmpegRef = useRef(createFFmpeg({ log: true }));
 
   useEffect(() => {
-    console.log('selectedMenu changed: ', selectedMenu);
+    console.log("selectedMenu changed: ", selectedMenu);
     switch (selectedMenu) {
-      case 'dance':
+      case "dance":
+        setCanvasSize(defaultCanvasDance);
         loadEmoji("/images/dance.gif");
         break;
-      case 'longtu':
+      case "longtu":
         loadLongtu(defaultLongtus[0]);
         break;
     }
   }, [selectedMenu]);
 
   useEffect(() => {
-    if (selectedMenu !== 'longtu' || !selectedLongtu) {
-      return
+    if (selectedMenu !== "longtu" || !selectedLongtu) {
+      return;
     }
 
     let idealLongtuWidth = 200;
     let idealLongtuContentSize = {
       width: idealLongtuWidth,
-      height: idealLongtuWidth * (selectedLongtu.height / selectedLongtu.width)
-    }
+      height: idealLongtuWidth * (selectedLongtu.height / selectedLongtu.width),
+    };
     setLongtuRect({
       left: 0,
       top: 0,
       width: idealLongtuWidth,
-      height: idealLongtuContentSize.height
+      height: idealLongtuContentSize.height,
     });
-    let canvasH = Math.min(idealLongtuContentSize.height + longtuTextHeight, maxCanvasSize.height)
+    let canvasH = Math.min(
+      idealLongtuContentSize.height + longtuTextHeight,
+      maxCanvasSize.height
+    );
     setCanvasSize({
       width: idealLongtuContentSize.width,
-      height: canvasH
+      height: canvasH,
     });
-    console.log('idealLongtuContentSize.height: ', idealLongtuContentSize.height, longtuTextHeight, canvasH);
+    console.log(
+      "idealLongtuContentSize.height: ",
+      idealLongtuContentSize.height,
+      longtuTextHeight,
+      canvasH
+    );
   }, [selectedLongtu, longtuTextHeight]);
 
   const loadEmoji = async (src) => {
@@ -182,7 +188,7 @@ export default function Home() {
 
   const exportImage = async () => {
     setExporting(true);
-    if (!loaded) {
+    if (!loaded && selectedMenu === "dance") {
       setLoadingText("Loading ffmpeg...");
       await load();
     }
@@ -199,31 +205,39 @@ export default function Home() {
     }).then(async (canvas) => {
       // 将canvas转换为图片数据URL
       const imageDataUrl = canvas.toDataURL("image/png");
+      let outputDataUrl;
 
-      console.log(emojiRect);
-      let ffmpeg = ffmpegRef.current;
-      await ffmpeg.FS("writeFile", "input.png", await fetchFile(imageDataUrl));
-      await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
-      await ffmpeg.run(
-        "-i",
-        "input.png",
-        "-i",
-        "emoji.gif",
-        "-filter_complex",
-        [
-          `[1:v]scale=${emojiRect.width}:-1[gif];`,
-          `[0:v][gif]overlay=${emojiRect.left}:${emojiRect.top}:format=auto,split[v1][v2];`,
-          "[v1]palettegen=reserve_transparent=on:transparency_color=ffffff[p];",
-          "[v2][p]paletteuse=new=1:dither=none:alpha_threshold=128",
-        ].join(""),
-        "-loop",
-        "0",
-        "result.gif"
-      );
-      const data = await ffmpeg.FS("readFile", "result.gif");
-      const outputDataUrl = URL.createObjectURL(
-        new Blob([data.buffer], { type: "image/png" })
-      );
+      if (selectedMenu === "longtu") {
+        outputDataUrl = imageDataUrl;
+      } else {
+        let ffmpeg = ffmpegRef.current;
+        await ffmpeg.FS(
+          "writeFile",
+          "input.png",
+          await fetchFile(imageDataUrl)
+        );
+        await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
+        await ffmpeg.run(
+          "-i",
+          "input.png",
+          "-i",
+          "emoji.gif",
+          "-filter_complex",
+          [
+            `[1:v]scale=${emojiRect.width}:-1[gif];`,
+            `[0:v][gif]overlay=${emojiRect.left}:${emojiRect.top}:format=auto,split[v1][v2];`,
+            "[v1]palettegen=reserve_transparent=on:transparency_color=ffffff[p];",
+            "[v2][p]paletteuse=new=1:dither=none:alpha_threshold=128",
+          ].join(""),
+          "-loop",
+          "0",
+          "result.gif"
+        );
+        const data = await ffmpeg.FS("readFile", "result.gif");
+        outputDataUrl = URL.createObjectURL(
+          new Blob([data.buffer], { type: "image/png" })
+        );
+      }
 
       // 创建一个临时的a标签用于下载
       const link = document.createElement("a");
