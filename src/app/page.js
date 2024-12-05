@@ -249,59 +249,70 @@ export default function Home() {
       const imageDataUrl = canvas.toDataURL("image/png");
       let outputDataUrl;
       let outputBlob;
+      let extension = "gif";
 
-      if (selectedMenu === "longtu") {
-        outputDataUrl = imageDataUrl;
-        let ffmpeg = ffmpegRef.current;
-        await ffmpeg.FS(
-          "writeFile",
-          "input.png",
-          await fetchFile(imageDataUrl)
-        );
-        await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
-        await ffmpeg.run(
-          "-i",
-          "input.png",
-          "result.gif"
-        );
-        const data = await ffmpeg.FS("readFile", "result.gif");
-        let blob = new Blob([data.buffer], { type: "image/png" })
-        outputBlob = blob;
-        outputDataUrl = URL.createObjectURL(blob);
-      } else {
-        let ffmpeg = ffmpegRef.current;
-        await ffmpeg.FS(
-          "writeFile",
-          "input.png",
-          await fetchFile(imageDataUrl)
-        );
-        await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
-        await ffmpeg.run(
-          "-i",
-          "input.png",
-          "-i",
-          "emoji.gif",
-          "-filter_complex",
-          [
-            `[1:v]scale=${emojiRect.width}:-1[gif];`,
-            `[0:v][gif]overlay=${emojiRect.left}:${emojiRect.top}:format=auto,split[v1][v2];`,
-            "[v1]palettegen=reserve_transparent=on:transparency_color=ffffff[p];",
-            "[v2][p]paletteuse=new=1:dither=none:alpha_threshold=128",
-          ].join(""),
-          "-loop",
-          "0",
-          "result.gif"
-        );
-        const data = await ffmpeg.FS("readFile", "result.gif");
-        outputDataUrl = URL.createObjectURL(
-          new Blob([data.buffer], { type: "image/png" })
-        );
+      switch (selectedMenu) {
+        case "longtu": {
+          outputDataUrl = imageDataUrl;
+          let ffmpeg = ffmpegRef.current;
+          await ffmpeg.FS(
+            "writeFile", 
+            "input.png",
+            await fetchFile(imageDataUrl)
+          );
+          await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
+          await ffmpeg.run(
+            "-i",
+            "input.png", 
+            "result.gif"
+          );
+          const data = await ffmpeg.FS("readFile", "result.gif");
+          let blob = new Blob([data.buffer], { type: "image/png" })
+          outputBlob = blob;
+          outputDataUrl = URL.createObjectURL(blob);
+          break;
+        }
+        case "chistmashat": {
+          outputDataUrl = imageDataUrl;
+          extension = "png";
+          break;
+        }
+        default: {
+          let ffmpeg = ffmpegRef.current;
+          await ffmpeg.FS(
+            "writeFile",
+            "input.png",
+            await fetchFile(imageDataUrl)
+          );
+          await ffmpeg.FS("writeFile", "emoji.gif", await fetchFile(emoji));
+          await ffmpeg.run(
+            "-i",
+            "input.png",
+            "-i", 
+            "emoji.gif",
+            "-filter_complex",
+            [
+              `[1:v]scale=${emojiRect.width}:-1[gif];`,
+              `[0:v][gif]overlay=${emojiRect.left}:${emojiRect.top}:format=auto,split[v1][v2];`,
+              "[v1]palettegen=reserve_transparent=on:transparency_color=ffffff[p];",
+              "[v2][p]paletteuse=new=1:dither=none:alpha_threshold=128",
+            ].join(""),
+            "-loop",
+            "0",
+            "result.gif"
+          );
+          const data = await ffmpeg.FS("readFile", "result.gif");
+          outputDataUrl = URL.createObjectURL(
+            new Blob([data.buffer], { type: "image/png" })
+          );
+          break;
+        }
       }
 
       // 创建一个临时的a标签用于下载
       const link = document.createElement("a");
       link.href = outputDataUrl;
-      link.download = "导出图片.gif";
+      link.download = "导出图片." + extension;
 
       // 触发下载
       link.click();
