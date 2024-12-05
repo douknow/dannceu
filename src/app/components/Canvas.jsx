@@ -20,77 +20,114 @@ const Canvas = React.forwardRef((props, ref) => {
             (props.background == 'transparent' && props.selectedMenu === "dance") ? "transparent" : "white",
         }}
       >
-        {props.selectedMenu === "dance" ? (
-          <div className="w-full h-full relative">
-            <img
-              src={props.avatar}
-              alt=""
-              className="rounded-[6px] fixed block bg-white"
-              style={{
-                left: "16px",
-                top: 16 + 6 + "px",
-                width: 64,
-                height: 64,
-              }}
-            />
+        {(() => {
+          switch (props.selectedMenu) {
+            case "dance":
+              return (
+                <div className="w-full h-full relative">
+                  <img
+                    src={props.avatar.src}
+                    alt=""
+                    className="rounded-[6px] fixed block bg-white"
+                    style={{
+                      left: "16px",
+                      top: 16 + 6 + "px",
+                      width: 64,
+                      height: 64,
+                    }}
+                  />
 
-            <div
-              className="text-[17px] fixed block text-[#3c3c4399]"
-              style={{
-                left: 16 + 64 + 20 + "px",
-                top: 16 + "px",
-                fontWeight: props.background === "transparent" ? 500 : 300,
-              }}
-            >
-              {props.nickname}
-            </div>
+                  <div
+                    className="text-[17px] fixed block text-[#3c3c4399]"
+                    style={{
+                      left: 16 + 64 + 20 + "px",
+                      top: 16 + "px",
+                      fontWeight: props.background === "transparent" ? 500 : 300,
+                    }}
+                  >
+                    {props.nickname}
+                  </div>
 
-            <img
-              src={props.contentEmoji}
-              alt=""
-              className="fixed block"
-              style={{
-                left: props.emojiRect.left,
-                top: props.emojiRect.top,
-                width: props.emojiRect.width,
-                height: props.emojiRect.height,
-                display:
-                  props.emojiRect.width > 0 && props.showContent
-                    ? "block"
-                    : "none",
-              }}
-            />
-          </div>
-        ) : (
-          <div className="w-full h-full relative bg-[#FFFBFF]">
-            <img
-              src={props.longtu?.src}
-              alt=""
-              className="absolute block"
-              style={{
-                left: props.longtuRect.left,
-                top: props.longtuRect.top,
-                width: props.longtuRect.width,
-                height: props.longtuRect.height,
-              }}
-            />
-            <div
-              className="absolute bottom-0 left-0 w-full flex items-center justify-center overflow-hidden"
-              style={{
-                height: props.longtuTextHeight + "px",
-              }}
-            >
-              <div
-                className="text-center text-black font-bold whitespace-pre-wrap"
-                style={{
-                  fontSize: props.longtuTextSize + "px",
-                }}
-              >
-                {props.longtuText}
-              </div>
-            </div>
-          </div>
-        )}
+                  <img
+                    src={props.contentEmoji}
+                    alt=""
+                    className="fixed block"
+                    style={{
+                      left: props.emojiRect.left,
+                      top: props.emojiRect.top,
+                      width: props.emojiRect.width,
+                      height: props.emojiRect.height,
+                      display:
+                        props.emojiRect.width > 0 && props.showContent
+                          ? "block"
+                          : "none",
+                    }}
+                  />
+                </div>
+              );
+            case "longtu":
+              return (
+                <div className="w-full h-full relative bg-[#FFFBFF]">
+                  <img
+                    src={props.longtu?.src}
+                    alt=""
+                    className="absolute block"
+                    style={{
+                      left: props.longtuRect.left,
+                      top: props.longtuRect.top,
+                      width: props.longtuRect.width,
+                      height: props.longtuRect.height,
+                    }}
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 w-full flex items-center justify-center overflow-hidden"
+                    style={{
+                      height: props.longtuTextHeight + "px",
+                    }}
+                  >
+                    <div
+                      className="text-center text-black font-bold whitespace-pre-wrap"
+                      style={{
+                        fontSize: props.longtuTextSize + "px",
+                      }}
+                    >
+                      {props.longtuText}
+                    </div>
+                  </div>
+                </div>
+              );
+            case "chistmashat":
+              return (
+                <div className="w-full h-full relative bg-[#FFFBFF]">
+                  <img
+                    src={props.avatar.src}
+                    alt=""
+                    className="rounded-[6px] absolute block bg-white"
+                    style={{
+                      left: 0,
+                      top: 0,
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+
+                  <img
+                    src={props.selectedChistmashat.src}
+                    alt=""
+                    className="absolute block"
+                    style={{
+                      left: 0,
+                      top: 0,
+                      width: '80px',
+                      height: props.selectedChistmashat.height / props.selectedChistmashat.width * 80 + "px",
+                    }}
+                  />
+                </div>
+              );
+            default:
+              return null;
+          }
+        })()}
       </div>
     </div>
   );

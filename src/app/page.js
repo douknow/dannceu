@@ -24,7 +24,10 @@ export default function Home() {
 
   const defaultLongtus = ["/images/longtu1.png"];
 
-  const [avatar, setAvatar] = useState("/images/demo_avatar.png");
+  const [avatar, setAvatar] = useState({
+    src: "/images/demo_avatar.png",
+    image: null,
+  });
   const [nickname, setNickname] = useState("陈八");
   const [loaded, setLoaded] = useState(false);
   const [emoji, setEmoji] = useState(null);
@@ -42,7 +45,7 @@ export default function Home() {
   const [loadingText, setLoadingText] = useState("加载中...");
   const [exporting, setExporting] = useState(false);
 
-  const [selectedMenu, setSelectedMenu] = useState("dance");
+  const [selectedMenu, setSelectedMenu] = useState("chistmashat");
   const [longtuTextHeight, setLongtuTextHeight] = useState(38);
   const [longtuRect, setLongtuRect] = useState({
     left: 0,
@@ -57,6 +60,26 @@ export default function Home() {
 
   const canvasRef = useRef(null);
   const ffmpegRef = useRef(createFFmpeg({ log: true }));
+
+  const buildInChistmashats = [
+    {
+      src: "/images/hats/hat1.png",
+      width: 3000,
+      height: 3000,
+    },
+  ];
+  const [selectedChistmashat, setSelectedChistmashat] = useState(buildInChistmashats[0]);
+
+  useEffect(() => {
+    let image = new Image();
+    image.src = avatar.src;
+    image.onload = () => {
+      setAvatar({
+        src: avatar.src,
+        image: image
+      });
+    };
+  }, []);
 
   useEffect(() => {
     console.log("selectedMenu changed: ", selectedMenu);
@@ -95,13 +118,18 @@ export default function Home() {
       width: idealLongtuContentSize.width,
       height: canvasH,
     });
-    console.log(
-      "idealLongtuContentSize.height: ",
-      idealLongtuContentSize.height,
-      longtuTextHeight,
-      canvasH
-    );
   }, [selectedLongtu, longtuTextHeight]);
+
+  useEffect(() => {
+    if (selectedMenu !== "chistmashat" || !avatar.image) {
+      return;
+    }
+    let idealCanvasWidth = Math.min(256, avatar.image.width);
+    setCanvasSize({
+      width: idealCanvasWidth,
+      height: idealCanvasWidth * (avatar.image.height / avatar.image.width),
+    });
+  }, [avatar]);
 
   const loadEmoji = async (src) => {
     let image = new Image();
@@ -184,6 +212,10 @@ export default function Home() {
 
   const handleLongtuTextSizeChange = (longtuTextSize) => {
     setLongtuTextSize(longtuTextSize);
+  };
+
+  const handleChistmashatChange = (chistmashat) => {
+    setSelectedChistmashat(chistmashat);
   };
 
   const exportImage = async () => {
@@ -319,6 +351,17 @@ export default function Home() {
         >
           <div>龙图</div>
         </div>
+        <div
+          className={
+            "w-[44px] h-[44px] cursor-pointer border-[1px] border-slate-200 rounded-md text-xs text-center leading-4 flex justify-center items-center " +
+            (selectedMenu === "chistmashat"
+              ? "bg-blue-500 text-white"
+              : "bg-white text-black")
+          }
+          onClick={() => setSelectedMenu("chistmashat")}
+        >
+          <div>圣诞帽</div>
+        </div>
 
         <div className="flex-1"></div>
       </div>
@@ -342,6 +385,7 @@ export default function Home() {
               longtuTextHeight={longtuTextHeight}
               longtuTextSize={longtuTextSize}
               isExporting={exporting}
+              selectedChistmashat={selectedChistmashat}
             />
             <Canvas
               showContent={true}
@@ -359,6 +403,7 @@ export default function Home() {
               longtuTextHeight={longtuTextHeight}
               longtuTextSize={longtuTextSize}
               isExporting={exporting}
+              selectedChistmashat={selectedChistmashat}
             />
           </div>
           <Panel
@@ -384,6 +429,9 @@ export default function Home() {
             longtuText={longtuText}
             longtuTextHeight={longtuTextHeight}
             longtuTextSize={longtuTextSize}
+            buildInChistmashats={buildInChistmashats}
+            selectedChistmashat={selectedChistmashat}
+            onChistmashatChange={handleChistmashatChange}
           />
         </div>
       </main>
