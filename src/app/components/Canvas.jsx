@@ -116,10 +116,11 @@ const Canvas = React.forwardRef((props, ref) => {
                     alt=""
                     className="absolute block"
                     style={{
-                      left: 0,
-                      top: 0,
-                      width: '80px',
-                      height: props.selectedChistmashat.height / props.selectedChistmashat.width * 80 + "px",
+                      left: props.selectedChistmashatRect.x + 'px',
+                      top: props.selectedChistmashatRect.y + 'px',
+                      width: props.selectedChistmashatRect.width + 'px',
+                      height: props.selectedChistmashat.height / props.selectedChistmashat.width * props.selectedChistmashatRect.width + "px",
+                      transform: `rotate(${props.selectedChistmashatRect.rotate}deg)`,
                     }}
                   />
                 </div>

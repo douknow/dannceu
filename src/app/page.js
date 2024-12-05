@@ -69,6 +69,12 @@ export default function Home() {
     },
   ];
   const [selectedChistmashat, setSelectedChistmashat] = useState(buildInChistmashats[0]);
+  const [selectedChistmashatRect, setSelectedChistmashatRect] = useState({
+    x: 0,
+    y: 0,
+    width: 80,
+    rotate: 0,
+  });
 
   useEffect(() => {
     let image = new Image();
@@ -216,6 +222,10 @@ export default function Home() {
 
   const handleChistmashatChange = (chistmashat) => {
     setSelectedChistmashat(chistmashat);
+  };
+
+  const handleChistmashatRectChange = (chistmashatRect) => {
+    setSelectedChistmashatRect(chistmashatRect);
   };
 
   const exportImage = async () => {
@@ -386,6 +396,7 @@ export default function Home() {
               longtuTextSize={longtuTextSize}
               isExporting={exporting}
               selectedChistmashat={selectedChistmashat}
+              selectedChistmashatRect={selectedChistmashatRect}
             />
             <Canvas
               showContent={true}
@@ -404,6 +415,7 @@ export default function Home() {
               longtuTextSize={longtuTextSize}
               isExporting={exporting}
               selectedChistmashat={selectedChistmashat}
+              selectedChistmashatRect={selectedChistmashatRect}
             />
           </div>
           <Panel
@@ -432,6 +444,8 @@ export default function Home() {
             buildInChistmashats={buildInChistmashats}
             selectedChistmashat={selectedChistmashat}
             onChistmashatChange={handleChistmashatChange}
+            selectedChistmashatRect={selectedChistmashatRect}
+            onChistmashatRectChange={handleChistmashatRectChange}
           />
         </div>
       </main>

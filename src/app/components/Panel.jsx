@@ -85,6 +85,34 @@ const Panel = (props) => {
     props.onLongtuTextSizeChange(e.target.value);
   };
 
+  const handleChistmashatRectXChange = (e) => {
+    props.onChistmashatRectChange({
+      ...props.selectedChistmashatRect,
+      x: parseInt(e.target.value),
+    });
+  };
+
+  const handleChistmashatRectYChange = (e) => {
+    props.onChistmashatRectChange({
+      ...props.selectedChistmashatRect,
+      y: parseInt(e.target.value),
+    });
+  };
+
+  const handleChistmashatRectRotateChange = (e) => {
+    props.onChistmashatRectChange({
+      ...props.selectedChistmashatRect,
+      rotate: parseInt(e.target.value),
+    });
+  };
+
+  const handleChistmashatRectWidthChange = (e) => {
+    props.onChistmashatRectChange({
+      ...props.selectedChistmashatRect,
+      width: parseInt(e.target.value),
+    });
+  };
+
   return (
     <div className="bg-white w-[300px] border-[1px] border-slate-200 rounded-lg p-4 fixed right-20 top-[50%] translate-y-[-50%] max-h-[80%] overflow-y-auto shadow-lg flex flex-col gap-4">
       {(() => {
@@ -262,24 +290,46 @@ const Panel = (props) => {
                 <div className="w-full h-[1px] bg-slate-200"></div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold">字体大小：</label>
+                  <label className="font-bold">X：</label>
                   <input
                     type="range"
-                    min={10}
-                    max={64}
-                    value={props.longtuTextSize}
-                    onChange={onLongtuTextSizeChange}
+                    min={-500}
+                    max={500}
+                    value={props.selectedChistmashatRect.x}
+                    onChange={handleChistmashatRectXChange}
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold">文字区域高度：</label>
+                  <label className="font-bold">Y：</label>
                   <input
                     type="range"
-                    min={30}
-                    max={100}
-                    value={props.longtuTextHeight}
-                    onChange={onLongtuTextHeightChange}
+                    min={-500}
+                    max={500}
+                    value={props.selectedChistmashatRect.y}
+                    onChange={handleChistmashatRectYChange}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="font-bold">旋转：</label>
+                  <input
+                    type="range"
+                    min={-180}
+                    max={180}
+                    value={props.selectedChistmashatRect.rotate}
+                    onChange={handleChistmashatRectRotateChange}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="font-bold">缩放：</label>
+                  <input
+                    type="range"
+                    min={0}
+                    max={500}
+                    value={props.selectedChistmashatRect.width}
+                    onChange={handleChistmashatRectWidthChange}
                   />
                 </div>
 
